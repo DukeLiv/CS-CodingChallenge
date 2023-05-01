@@ -1,35 +1,32 @@
 'use strict';
 
-process.stdin.resume();
-process.stdin.setEncoding('utf-8');
-
-let inputString = '';
-let currentLine = 0;
-
-process.stdin.on('data', inputStdin => {
-    inputString += inputStdin;
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
 });
-
-process.stdin.on('end', _ => {
-    inputString = inputString.replace(/\s*$/, '')
-        .split('\n')
-        .map(str => str.replace(/\s*$/, ''));
-
-    main();
-});
-
-function readLine() {
-    return inputString[currentLine++];
-}
 
 function solution(n) {
-    // Write solution here
-    return "";
+    let even = 0;
+    let odd = 0;
+
+    for (let i = 1; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) {
+            if (i % 2 === 0) even++;
+            else odd++;
+
+            if ((n / i) % 2 === 0) even++;
+            else if (n / i !== i) odd++;
+        }
+    }
+
+    if (even > odd) return "BUY";
+    else if (even < odd) return "SELL";
+    else return "PASS";
 }
 
-function main() {
-    var n = readLine().split(' ');
-
-    const answer = solution(n);
+readline.question('', n => {
+    const answer = solution(parseInt(n));
     console.log(answer);
-}
+
+    readline.close();
+});
