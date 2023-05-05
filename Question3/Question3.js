@@ -1,40 +1,51 @@
 'use strict';
 
-process.stdin.resume();
-process.stdin.setEncoding('utf-8');
-
-let inputString = '';
-let currentLine = 0;
-
-process.stdin.on('data', inputStdin => {
-    inputString += inputStdin;
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
 });
-
-process.stdin.on('end', _ => {
-    inputString = inputString.replace(/\s*$/, '')
-        .split('\n')
-        .map(str => str.replace(/\s*$/, ''));
-
-    main();
-});
-
-function readLine() {
-    return inputString[currentLine++];
-}
 
 function solution(N, M, P) {
-    // Write solution here
-    return 0;
+    let is_sorted = true;
+    let index = 0;
+    let sum = P[index];
+
+    for (let i = 0; i < N - 1; i++) {
+        if (P[i] > P[i + 1]) {
+            is_sorted = false;
+            break;
+        }
+    }
+
+    if (is_sorted) return 1;
+
+    while (index < N && sum <= M) {
+        for (let i = 0; i < index + 1; i++) {
+            if (P[i] > P[i + 1]) {
+                let temp = P[i];
+                P[i] = P[i + 1];
+                P[i + 1] = temp;
+            }
+        }
+
+        index++;
+        sum += P[index];
+    }
+
+    for (let i = 0; i < N - 1; i++) if (P[i] > P[i + 1]) return 0;
+
+    return 1;
 }
 
-function main() {
-    const firstLine = readLine().split(' ');
-    const secondLine = readLine().split(' ');
+readline.question('', firstLine => {
+    const [N, M] = firstLine.split(' ').map(Number);
 
-    const N = parseInt(firstLine[0], 10);
-    const M = parseInt(firstLine[1], 10);
-    const P = secondLine.map(pTemp => parseInt(pTemp, 10));
+    readline.question('', secondLine => {
+        const P = secondLine.split(' ').map(Number);
 
-    const answer = solution(N, M, P);
-    console.log(answer);
-}
+        const answer = solution(N, M, P);
+        console.log(answer);
+
+        readline.close();
+    });
+});

@@ -1,6 +1,28 @@
 def solution(N, M, P):
-    # Write solution here
-    return 0
+    is_sorted = True
+    index = 0
+    sum = P[index]
+
+    for i in range(N - 1):
+        if P[i] > P[i + 1]:
+            is_sorted = False
+            break
+
+    if is_sorted: return 1
+
+    while index < N and sum <= M:
+        for i in range(index + 1):
+            if P[i] > P[i + 1]:
+                P[i], P[i + 1] = P[i + 1], P[i]
+
+        index += 1
+        sum += P[index]
+
+    for i in range(N - 1):
+        if P[i] > P[i + 1]:
+            return 0
+
+    return 1
 
 def main():
     N, M = map(int, input().split())
